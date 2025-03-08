@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from scripts.eda import Descriptive  # Ensure the class is imported from the correct module
+from scripts.eda import Descriptive  
 
 @pytest.fixture
 def sample_data():

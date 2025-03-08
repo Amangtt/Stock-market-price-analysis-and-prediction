@@ -1,12 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
-
+import logging
 
 class Descriptive:
     def __init__(self, data, logger=None):
         self.df=data
-        self.logger=logger
+        self.logger=logger or logging.getLogger(__name__)
 
     def headline_length(self):
         try:

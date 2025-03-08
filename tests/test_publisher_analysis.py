@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from scripts.Publisher_analysis import publisher  # Replace with your actual module name
+from scripts.Publisher_analysis import publisher  
 
 @pytest.fixture
 def sample_data():

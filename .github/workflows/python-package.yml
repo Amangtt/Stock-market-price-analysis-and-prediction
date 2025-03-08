@@ -34,4 +34,4 @@ jobs:
           python -c "import nltk; nltk.download('wordnet')"
       - name: Run Tests
         run: |
-          pytest tests/ --maxfail=5 --disable-warnings --cov=financial_analysis
+          pytest tests/ 

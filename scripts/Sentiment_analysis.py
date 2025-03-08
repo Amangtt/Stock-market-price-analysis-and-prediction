@@ -20,53 +20,62 @@ class sentiment:
 
     def preprocess(self, text):
         try:
-            # Tokenize
-            tokens = word_tokenize(text.lower())
-            # Remove punctuation and stopwords
-            tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
-            # Lemmatize
-            tokens = [lemmatizer.lemmatize(word) for word in tokens]
+                # Tokenize
+                tokens = word_tokenize(text.lower())
+                # Remove punctuation and stopwords (but keep meaningful words like "stock")
+                tokens = [word for word in tokens if word.isalnum() and (word not in stop_words or word in ["stock"])]
+                # Lemmatize
+                tokens = [lemmatizer.lemmatize(word) for word in tokens]
 
-            if self.logger:
-                self.logger.info("Word tokenization completed successfully.")
+                if not tokens:
+                        return text.lower()  # Return original text (lowercased) if empty after processing
 
-            return " ".join(tokens)  # Convert tokens back to a string
-        
+                if self.logger:
+                        self.logger.info("Word tokenization completed successfully.")
+
+                return " ".join(tokens)  # Convert tokens back to a string
+
         except Exception as e:
-            if self.logger:
-                self.logger.error(f"Failed to tokenize words: {e}")
-            return ""  # Prevent returning None
+                if self.logger:
+                        self.logger.error(f"Failed to tokenize words: {e}")
+                return text.lower()  # Return original text in case of failure
 
     def sentiment_analysis(self, path):
         try:
-            df = self.df.copy()  # Avoid modifying the original dataframe
-            df['processed_headline'] = df['headline'].apply(self.preprocess)
+                df = self.df.copy()  # Avoid modifying the original dataframe
+                df['processed_headline'] = df['headline'].apply(self.preprocess)
 
-            # Drop empty processed headlines
-            df = df[df['processed_headline'] != ""]
+                # Drop empty processed headlines
+                df = df[df['processed_headline'].str.strip() != ""]
 
-            # Select relevant columns
-            head = df[['headline', 'processed_headline', 'date', 'stock']].copy()
+                if df.empty:
+                        if self.logger:
+                                self.logger.warning("No valid headlines after preprocessing.")
+                        return pd.DataFrame(columns=['headline', 'processed_headline', 'date', 'stock', 'score', 'keywords', 'sentiment'])
 
-            # Sentiment Analysis using TextBlob
-            head['score'] = head['processed_headline'].apply(lambda x: TextBlob(x).sentiment.polarity if x else 0)
+                # Select relevant columns
+                head = df[['headline', 'processed_headline', 'date', 'stock']].copy()
 
-            # Load spaCy model for Topic Modeling
-            nlp = spacy.load("en_core_web_sm")
-            head['keywords'] = head['processed_headline'].apply(lambda x: [token.text for token in nlp(x) if token.pos_ in ["NOUN", "PROPN"]] if x else [])
+                # Sentiment Analysis using TextBlob
+                head['score'] = head['processed_headline'].apply(lambda x: TextBlob(x).sentiment.polarity if x else 0)
 
-            # Assign sentiment labels
-            head['sentiment'] = head['score'].apply(lambda score: 'Positive' if score >= 0.05 
-                                                    else ('Negative' if score <= -0.05 else 'Neutral'))
+                # Load spaCy model for Topic Modeling
+                nlp = spacy.load("en_core_web_sm")
+                head['keywords'] = head['processed_headline'].apply(lambda x: [token.text for token in nlp(x) if token.pos_ in ["NOUN", "PROPN"]] if x else [])
 
-            if self.logger:
-                self.logger.info("Sentiment analysis completed successfully.")
+                # Assign sentiment labels
+                head['sentiment'] = head['score'].apply(lambda score: 'Positive' if score >= 0.05 
+                                                        else ('Negative' if score <= -0.05 else 'Neutral'))
 
-            # Save to CSV
-            head.to_csv(path, index=False)
-            return head
+                if self.logger:
+                        self.logger.info("Sentiment analysis completed successfully.")
+
+                # Save to CSV
+                head.to_csv(path, index=False)
+                return head
 
         except Exception as e:
-            if self.logger:
-                self.logger.error(f"Sentiment analysis failed: {e}")
-            return pd.DataFrame()  # Return empty DataFrame if error occurs
+                if self.logger:
+                        self.logger.error(f"Sentiment analysis failed: {e}")
+                return pd.DataFrame(columns=['headline', 'processed_headline', 'date', 'stock', 'score', 'keywords', 'sentiment'])
+

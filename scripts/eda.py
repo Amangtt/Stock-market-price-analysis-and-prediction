@@ -4,25 +4,27 @@ from datetime import datetime
 
 
 class Descriptive:
-    def __init__(self, data):
+    def __init__(self, data, logger=None):
         self.df=data
-      
+        self.logger=logger
 
     def headline_length(self):
-  
+        try:
             self.df["headline length"] = self.df["headline"].apply(len)
 
             self.logger.info("headline length calculated successfully.")
             return self.df
-   
+        except Exception as e:
+            error_message = f"Failed to calculate length for: {e}"
+            self.logger.error(error_message)
     def check_missing(self):
-
+        self.logger.info("missing values calculated successfully.")
         return self.df.isnull().sum()
 
 
  
     def stock(self):
-
+        try:
             df=self.df
             df['date'] = df['date'].str[:10]
             df['date']= pd.to_datetime(df['date'])
@@ -31,10 +33,12 @@ class Descriptive:
             top_5=stocks.head(5)
             self.logger.info("Number of stocks with the most number of articles calculated successfully.")
             return top_5
-
+        except Exception as e:
+            error_message = f"Failed to calculate Stock count {e}"
+            self.logger.error(error_message)
 
     def plot_article_over_time(self):
-   
+        try:
             df=self.df
             """df['date'] = df['date'].str[:10]
             df['date'] = pd.to_datetime(df['date'])"""
@@ -49,4 +53,6 @@ class Descriptive:
             plt.grid(axis='y')
             plt.tight_layout()
             plt.show()
-  
+        except Exception as e:
+            error_message = f"Failed to plot article overtime {e}"
+            self.logger.error(error_message)

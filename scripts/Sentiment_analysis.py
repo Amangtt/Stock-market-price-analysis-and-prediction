@@ -13,7 +13,7 @@ sid = SentimentIntensityAnalyzer()
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
-class Sentiment:
+class sentiment:
     def __init__(self, data, logger=None):
         self.df = data
         self.logger = logger

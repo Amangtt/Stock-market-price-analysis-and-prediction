@@ -26,7 +26,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt  # Install other dependencies
           pip install pytest pytest-cov  # Install pytest and pytest-cov for coverage
-
+      - name: Install NLTK data
+        run: |
+          python -c "import nltk; nltk.download('vader_lexicon')"
+          python -c "import nltk; nltk.download('punkt')"
+          python -c "import nltk; nltk.download('stopwords')"
+          python -c "import nltk; nltk.download('wordnet')"
       - name: Run Tests
         run: |
           pytest tests/ --maxfail=5 --disable-warnings --cov=financial_analysis

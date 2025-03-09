@@ -20,27 +20,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'  # Adjust to match your project’s Python version
-      - name: Install TA-Lib Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gcc wget
-          sudo apt-get install -y python3-dev  # Add python3-dev to ensure proper building
-          sudo apt-get install -y libta-lib0 libta-lib-dev  # Ensure TA-Lib libraries are installed
-
-      - name: Install TA-Lib from Source (if needed)
-        run: |
-          if [ ! -d "/usr/local/lib/libta-lib.a" ]; then
-            echo "Installing TA-Lib from source..."
-            wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
-            tar -xzf ta-lib-0.4.0-src.tar.gz
-            cd ta-lib/
-            ./configure --prefix=/usr/local
-            make
-            sudo make install
-            sudo ldconfig  # Reload library paths
-          else
-            echo "TA-Lib is already installed."
-          fi
 
       - name: Install Python Dependencies
         run: |

@@ -9,3 +9,4 @@ statsmodels
 yfinance
 scipy
 numpy
+talib

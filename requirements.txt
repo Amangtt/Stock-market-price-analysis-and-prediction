@@ -4,3 +4,8 @@ nltk
 textblob
 spacy
 pytest
+plotly
+statsmodels
+yfinance
+scipy
+numpy

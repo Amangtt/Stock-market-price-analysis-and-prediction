@@ -1,9 +1,6 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -26,15 +23,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential gcc wget python3-dev
 
-      - name: Install TA-Lib from Source
-        run: |
-          wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
-          tar -xzf ta-lib-0.4.0-src.tar.gz
-          cd ta-lib/
-          ./configure --prefix=/usr/local
-          make
-          sudo make install
-          sudo ldconfig  # Reload library paths
 
       - name: Install Python Packages
         run: |

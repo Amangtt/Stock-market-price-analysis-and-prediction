@@ -10,4 +10,4 @@ yfinance
 scipy
 numpy
 tensorflow
-sklearn
+scikit-learn

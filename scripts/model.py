@@ -80,7 +80,7 @@ class Train:
         try:
             plt.plot(self.y_test, label='Actual')
             plt.plot(self.prediction['LSTM'], label='LSTM Forecast', linestyle='--')
-            plt.title('TSLA Stock Price Forecast (LSTM)')
+            plt.title('AAPL Stock Price Forecast (LSTM)')
             plt.legend()
             plt.show()
             self.logger.info("successfully plotted the prediction.")

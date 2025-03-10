@@ -30,4 +30,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest tests/test_model.py
+          pytest tests/test_forecasting.py

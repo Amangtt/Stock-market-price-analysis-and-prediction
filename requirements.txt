@@ -9,3 +9,5 @@ statsmodels
 yfinance
 scipy
 numpy
+tensorflow
+sklearn
